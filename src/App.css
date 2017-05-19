@@ -1,0 +1,30 @@
+html, body, #root {
+  min-height: 100%;
+}
+body {
+  background: #16222A;  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to top, #3A6073, #16222A);  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to top, #3A6073, #16222A); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+
+.Heading {
+  color: #f6f8f8;
+}
+
+.Label {
+  color: #f6f8f8;
+}
+
+.add-action-container.hidden {
+  visibility: hidden;
+  height: 0;
+  opacity: 0;
+  transition: height 1.5s 0s, visibility 1s ,5s, opacity 1s linear;
+}
+
+.add-action-container {
+  visibility: visible;
+  height: 200px;
+  opacity: 1;
+  transition: height .5s 0s, visibility .5s 0s, opacity .5s linear;
+}
