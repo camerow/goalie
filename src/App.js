@@ -29,8 +29,8 @@ class App extends Component {
     this.state = {
       haveAuth: false,
       user: {},
-      email: 'cameron.will@gmail.com',
-      password: 'so.1itgoes',
+      email: '',
+      password: '',
       teamActions: [],
       teamMembers: ['Leigh', 'Will', 'Graham', 'Cody']
     }
