@@ -12,7 +12,7 @@ import {
   auth
 } from "./utils/firebase-utils";
 import config from './rebass-config';
-
+import Login from './Login';
 import TeamActionsContainer from './TeamActionsContainer';
 import './App.css';
 
@@ -106,7 +106,6 @@ class App extends Component {
 
   handleAuthInput(event) {
     const { name, value } = event.target;
-
     this.setState({
       [name]: value
     });
@@ -118,59 +117,34 @@ class App extends Component {
 
   render() {
     const TeamActions = (
-      <TeamActionsContainer signOut={this.signOut.bind(this)} user={this.state.user} />
-    );
-
-    const Login = (
-      <RContainer>
-        <Input value={this.state.email}   
-          label="Email"
-          name="email"
-          onChange={this.handleAuthInput.bind(this)} />
-        <Input 
-          value={this.state.password}
-          type="password" 
-          label="Password"
-          name="password"
-          onChange={this.handleAuthInput.bind(this)} />
-        <Button backgroundColor="secondary" 
-          onClick={this.handleAuth.bind(this)}>
-          Login
-        </Button>
-        
-        <Input 
-          label="First Name"
-          name="firstName"
-          value={this.state.firstName}
-          onChange={this.handleAuthInput.bind(this)} />
-        <Input 
-          label="Last Name"
-          name="lastName"
-          value={this.state.lastName}
-          onChange={this.handleAuthInput.bind(this)} />
-        <Button backgroundColor="secondary" 
-          onClick={this.createUser.bind(this)}>
-          Register
-        </Button>
-        { this.state.error ? this.state.error : null }
-      </RContainer>
+      <TeamActionsContainer 
+        signOut={this.signOut.bind(this)} 
+        user={this.state.user} />
     );
 
     if (this.state.haveCheckedAuth) {
-
       return (
-        <div>
-          <Button style={{float: 'right'}} onClick={this.signOut.bind(this)}> Signout </Button>
-
+        <div>          
           {
             this.state.haveAuth ?
-            TeamActions
+            <div>
+              <Button style={{float: 'right'}} onClick={this.signOut.bind(this)}> 
+                Signout 
+              </Button>
+
+              {TeamActions}
+
+            </div>              
             :
-            Login
+            <Login 
+              createUser={this.createUser.bind(this)} 
+              authenticate={this.handleAuth.bind(this)} 
+              onInputChange={this.handleAuthInput.bind(this)} />
           }
         </div>
       );
-    } else {
+    } 
+    else {
       return null;
     }
   }
