@@ -19,12 +19,12 @@ body {
   visibility: hidden;
   height: 0;
   opacity: 0;
-  transition: height 1.5s 0s, visibility 1s 5s, opacity 1s linear;
+  transition: height 1.5s 0s, visibility 0s 1s, opacity .5s linear;
 }
 
 .add-action-container {
   visibility: visible;
   height: 200px;
   opacity: 1;
-  transition: height .5s 0s, visibility .5s 0s, opacity .5s linear;
+  transition: height .5s 0s, visibility .5s 0s, opacity .75s linear;
 }
