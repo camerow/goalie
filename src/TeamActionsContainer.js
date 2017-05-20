@@ -81,12 +81,8 @@ class TeamActionsContainer extends Component {
 
     render() {
         return (
-            <div>
-                <Button style={{float: 'right'}} onClick={this.props.signOut}> Signout </Button>
-                
-                <Container>
-                    <AddTeamAction addItem={this.addItem.bind(this)} />
-                </Container>
+            <div>                
+                <AddTeamAction addItem={this.addItem.bind(this)} />
                 
                 <TeamActionsList 
                     menusOpen={this.state.actionItemMenusOpen}

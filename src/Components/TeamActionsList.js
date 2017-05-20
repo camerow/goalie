@@ -20,6 +20,7 @@ const TeamActionsList = ({openMenu, menusOpen, teamActions, onDeleteTeamAction, 
         <div style={{ border: '#fff', padding: '24px'}}>
             <Container>
                 <PageHeader
+                    style={{marginTop: '16px', paddingTop: '16px'}}
                     theme="info"
                     heading="Team Goals"
                 />
@@ -31,7 +32,7 @@ const TeamActionsList = ({openMenu, menusOpen, teamActions, onDeleteTeamAction, 
                                 <Panel key={i + `-${action.name}`} theme="info">
                                     <PanelHeader theme="primary">
                                         {action.name}
-                                        <Dropdown onClick={ () => openMenu(i) }>
+                                        {/*<Dropdown onClick={ () => openMenu(i) }>
                                             <Button
                                                 backgroundColor="primary"
                                                 color="white"
@@ -49,16 +50,17 @@ const TeamActionsList = ({openMenu, menusOpen, teamActions, onDeleteTeamAction, 
                                                 Hi
                                                 </NavItem>
                                             </DropdownMenu>
-                                        </Dropdown>
+                                        </Dropdown>*/}
+                                        <Space x={2} />
+                                        
+                                        <Rating 
+                                            onClick={(index) => updateRating(action, index)}
+                                            color="orange" 
+                                            value={action.rating || 0} />
                                     </PanelHeader>
                                     <Text>
                                         {action.goal}
                                     </Text>
-                                    Score:
-                                    <Rating 
-                                        onClick={(index) => updateRating(action, index)}
-                                        color="orange" 
-                                        value={action.rating || 0} />
 
                                     <PanelFooter theme="secondary">
                                         Added By {action.displayName ? `${action.displayName}` : 'Unknown'}

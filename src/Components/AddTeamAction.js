@@ -4,6 +4,7 @@ import {
   Heading,
   Button,
 } from 'rebass';
+import { Container, Row, Col } from 'react-grid-system';
 
 class AddTeamAction extends Component {
     constructor() {
@@ -62,43 +63,49 @@ class AddTeamAction extends Component {
         const { activeClass } = this.state;
 
         return (
-            <div className={`add-action-container ${activeClass}`}>
-                <Heading level={2}>
-                    Add Action:
-                </Heading>
-                <Input
-                  label="Name"
-                  name="input_example"
-                  value={this.state.name}
-                  placeholder="ex. Send dev to trade show..."
-                  onChange={(event) => this.setState({
-                    name: event.target.value
-                  }) 
-                  }
-                  rounded
-                  type="text"
-                />
-                <Input
-                  label="Goal/Outcome"
-                  name="input_example"
-                  onChange={(event) => this.setState({
-                    goal: event.target.value
-                  }) 
-                  }
-                  value={this.state.goal}
-                  placeholder="Gain a better working knowledge of..."
-                  rounded
-                  type="text"
-                />
-                <Button
-                  backgroundColor="primary"
-                  color="white"
-                  inverted
-                  rounded
-                  onClick={this.onAddAction.bind(this)}>
-                    Add Team Goal 
-                </Button>
-            </div>
+            <Container>
+                <Row>
+                    <Col lg={4}>
+                        <div className={`add-action-container ${activeClass}`}>
+                            <Heading style={{ paddingTop: '32px'}} level={2}>
+                                Add Action:
+                            </Heading>
+                            <Input
+                            label="Name"
+                            name="input_example"
+                            value={this.state.name}
+                            placeholder="ex. Send dev to trade show..."
+                            onChange={(event) => this.setState({
+                                name: event.target.value
+                            }) 
+                            }
+                            rounded
+                            type="text"
+                            />
+                            <Input
+                            label="Goal/Outcome"
+                            name="input_example"
+                            onChange={(event) => this.setState({
+                                goal: event.target.value
+                            }) 
+                            }
+                            value={this.state.goal}
+                            placeholder="Gain a better working knowledge of..."
+                            rounded
+                            type="text"
+                            />
+                            <Button
+                            backgroundColor="primary"
+                            color="white"
+                            inverted
+                            rounded
+                            onClick={this.onAddAction.bind(this)}>
+                                Add Team Goal 
+                            </Button>
+                        </div>
+                    </Col>
+                </Row>
+            </Container>
         );
     }
 }

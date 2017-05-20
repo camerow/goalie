@@ -159,10 +159,16 @@ class App extends Component {
     if (this.state.haveCheckedAuth) {
 
       return (
-        this.state.haveAuth ?
-        TeamActions
-        :
-        Login
+        <div>
+          <Button style={{float: 'right'}} onClick={this.signOut.bind(this)}> Signout </Button>
+
+          {
+            this.state.haveAuth ?
+            TeamActions
+            :
+            Login
+          }
+        </div>
       );
     } else {
       return null;
