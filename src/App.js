@@ -121,6 +121,12 @@ class App extends Component {
     firebaseUtils.logout();
   }
 
+  setUserTeam(teamID) {
+    this.setState({
+      userCurrentTeam: teamID
+    });
+  }
+
   render() {
     const { haveAuth, haveCheckedAuth, userCurrentTeam, user } = this.state;
 
@@ -143,7 +149,7 @@ class App extends Component {
         }
         else {
           return (
-            <TeamCreationContainer />
+            <TeamCreationContainer setUserTeam={this.setUserTeam.bind(this)} />
           );
         }
       }      

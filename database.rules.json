@@ -1,16 +1,6 @@
 {
   "rules": {
-    "users": {
-      "$uid": {
-        ".read": "$uid === auth.uid",
-        ".write": "$uid === auth.uid"
-      }
-    },
-    "action-items": {
-      "$item": {
-        ".write": "data.child('uid') === auth.uid",
-        ".read": true
-      }
-    }
+    ".read": "true",
+    ".write": "true"
   }
 }
