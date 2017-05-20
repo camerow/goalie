@@ -12,8 +12,11 @@ import {
   auth
 } from "./utils/firebase-utils";
 import config from './rebass-config';
+
 import Login from './Login';
 import TeamActionsContainer from './TeamActionsContainer';
+import TeamCreationContainer from './TeamCreationContainer';
+
 import './App.css';
 
 class App extends Component {
@@ -24,7 +27,8 @@ class App extends Component {
       haveCheckedAuth: false,
       user: {},
       email: '',
-      password: ''
+      password: '',
+      userCurrentTeam: false
     }
   }
 
@@ -78,13 +82,15 @@ class App extends Component {
     } = this.state;
     
     if (firstName.length > 0 && lastName.length > 0 && email.length > 0 && password.length > 0) {
-      firebaseUtils.createUser({
+      let newUser = {
         email,
         password,
         firstName,
         lastName
-      }, (err, res) => {
-        if ( !err ) {
+      };
+
+      firebaseUtils.createUser(newUser, (err, res) => {
+        if ( err ) {
           this.setState({ error: err });
         }
         else {
@@ -94,7 +100,7 @@ class App extends Component {
     } else {
       this.setState({
         error: 'You must provide a first and last name, email and password to register.'
-      })
+      });
     }
   }
 
@@ -116,33 +122,39 @@ class App extends Component {
   }
 
   render() {
-    const TeamActions = (
-      <TeamActionsContainer 
-        signOut={this.signOut.bind(this)} 
-        user={this.state.user} />
-    );
+    const { haveAuth, haveCheckedAuth, userCurrentTeam, user } = this.state;
 
-    if (this.state.haveCheckedAuth) {
-      return (
-        <div>          
-          {
-            this.state.haveAuth ?
+    if (haveCheckedAuth) {
+      if (haveAuth) {
+        if (userCurrentTeam) {
+          return (
             <div>
               <Button style={{float: 'right'}} onClick={this.signOut.bind(this)}> 
                 Signout 
               </Button>
 
-              {TeamActions}
+              <TeamActionsContainer 
+                currentGroup={userCurrentTeam}
+                signOut={this.signOut.bind(this)} 
+                user={user} />
 
-            </div>              
-            :
-            <Login 
-              createUser={this.createUser.bind(this)} 
-              authenticate={this.handleAuth.bind(this)} 
-              onInputChange={this.handleAuthInput.bind(this)} />
-          }
-        </div>
-      );
+            </div>
+          );
+        }
+        else {
+          return (
+            <TeamCreationContainer />
+          );
+        }
+      }      
+      else {
+        return (
+          <Login 
+            createUser={this.createUser.bind(this)} 
+            authenticate={this.handleAuth.bind(this)} 
+            onInputChange={this.handleAuthInput.bind(this)} />
+        );
+      }
     } 
     else {
       return null;
