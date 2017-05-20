@@ -12,14 +12,14 @@ const baseColors = {
 }
 
 const customColors = {
-    purp: 'rgb(26, 78, 112)',
-    purpGrey: 'rgb(86, 100, 100)'
+    ocean: 'rgb(26, 78, 112)',
+    oceanGrey: 'rgb(86, 100, 100)'
 }
 
 const otherColorSet = {
-    primary: customColors.purp,
-    secondary: customColors.purpGrey,
-    info: customColors.purp
+    primary: customColors.ocean,
+    secondary: customColors.oceanGrey,
+    info: customColors.white
 }
 
 const colors = {

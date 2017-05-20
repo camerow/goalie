@@ -9,8 +9,7 @@ import {
 
 import {
   firebaseUtils, 
-  auth,
-  database
+  auth
 } from "./utils/firebase-utils";
 import config from './rebass-config';
 

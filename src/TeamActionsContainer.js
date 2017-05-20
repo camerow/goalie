@@ -2,17 +2,13 @@ import React, { Component } from 'react';
 import AddTeamAction from './Components/AddTeamAction';
 import TeamActionsList from './Components/TeamActionsList';
 import {
-  Button,
-  Container as RContainer,
-  Input
+  Button
 } from 'rebass';
 import {
   Container
 } from 'react-grid-system';
 import base from './utils/base';
 import {
-  firebaseUtils, 
-  auth,
   database
 } from "./utils/firebase-utils";
 
@@ -20,7 +16,9 @@ class TeamActionsContainer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            teamActions: []
+            teamActions: [],
+            teamActionsFilter: '',
+            actionItemMenusOpen: {}
         }
     }
 
@@ -52,6 +50,7 @@ class TeamActionsContainer extends Component {
             displayName,
             uid,
             dateAdded: new Date(),
+            rating: 0,
             goal: newItem.goal,
             name: newItem.name
         };
@@ -65,16 +64,36 @@ class TeamActionsContainer extends Component {
         return database.ref().update(updates);
     }
 
+    updateRating({key}, rating) {
+        database.ref().child('action-items/' + key).update({
+            rating
+        });
+    }
+
+    openActionItemMenu(index) {
+        console.log(this.state.actionItemMenusOpen);
+        this.setState({
+            actionItemMenusOpen: Object.assign({}, this.state.actionItemMenusOpen, { 
+                [index]: !this.state.actionItemMenusOpen[index] 
+            })
+        })
+    }
+
     render() {
         return (
-            <div className="">
+            <div>
                 <Button style={{float: 'right'}} onClick={this.props.signOut}> Signout </Button>
                 
                 <Container>
                     <AddTeamAction addItem={this.addItem.bind(this)} />
                 </Container>
-
-                <TeamActionsList onDeleteTeamAction={this.deleteTeamAction.bind(this)} teamActions={this.state.teamActions} />
+                
+                <TeamActionsList 
+                    menusOpen={this.state.actionItemMenusOpen}
+                    openMenu={this.openActionItemMenu.bind(this)}
+                    updateRating={this.updateRating.bind(this)} 
+                    onDeleteTeamAction={this.deleteTeamAction.bind(this)} 
+                    teamActions={this.state.teamActions} />
             </div>
         );
     }
