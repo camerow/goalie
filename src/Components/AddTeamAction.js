@@ -2,12 +2,7 @@ import React, { Component } from 'react';
 import { 
   Input, 
   Heading,
-  Container as RContainer,
   Button,
-  PageHeader,
-  Panel,
-  PanelHeader,
-  Text
 } from 'rebass';
 
 class AddTeamAction extends Component {
@@ -20,41 +15,47 @@ class AddTeamAction extends Component {
             activeClass: 'hidden'
         }
     }
+    hideOrShowActionForm() {
+        const {userActive} = this.state;
 
-    componentDidMount() {
-        const hideOrShowActionForm = () => {
-            const {userActive} = this.state;
-
-            if (userActive && !!this.tid) {
+        if (userActive && !!this.tid) {
+            window.clearTimeout(this.tid);
+        }
+        else {
+            this.setState({
+                userActive: true,
+                activeClass: ''
+            });
+        }
+        this.tid = setTimeout(() => {
+            if (this.tid) {
+                this.setState({
+                    userActive: false,
+                    activeClass: 'hidden'
+                });
                 window.clearTimeout(this.tid);
             }
-            else {
-                this.setState({
-                    userActive: true,
-                    activeClass: ''
-                });
-            }
-            this.tid = setTimeout(() => {
-                if (this.tid) {
-                    this.setState({
-                        userActive: false,
-                        activeClass: 'hidden'
-                    })
-                }
-            }, 2000);            
-        };
+        }, 2000);            
+    }
 
-        window.addEventListener('mousemove', hideOrShowActionForm);
-        window.addEventListener('keyup', hideOrShowActionForm);
+    componentDidMount() {
+        window.addEventListener('mousemove', this.hideOrShowActionForm.bind(this));
+        window.addEventListener('keyup', this.hideOrShowActionForm.bind(this));
     }
 
     componentWillUnmount() {
-        // window.removeEventListener('mousemove');
-        // window.removeEventListener('keyup');
+        window.clearTimeout(this.tid);
+
+        window.removeEventListener('mousemove', this.hideOrShowActionForm);
+        window.removeEventListener('keyup', this.hideOrShowActionForm);
     }
 
     onAddAction() {
         this.props.addItem({...this.state});
+        this.setState({
+            name: '',
+            goal: ''
+        });
     }
 
     render() {

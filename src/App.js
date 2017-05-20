@@ -1,38 +1,31 @@
 import React, {
   Component
 } from 'react';
-import { 
-  Heading,
+import {
   Button,
   Container as RContainer,
   Input
 } from 'rebass';
-import {
-  Container
-} from 'react-grid-system';
-import AddTeamAction from './AddTeamAction';
-import TeamActionsList from './TeamActionsList';
-import base from './utils/base';
+
 import {
   firebaseUtils, 
   auth,
-  ref,
   database
 } from "./utils/firebase-utils";
 import config from './rebass-config';
+
+import TeamActionsContainer from './TeamActionsContainer';
 import './App.css';
 
-window.auth = auth;
 class App extends Component {
   constructor() {
     super();
     this.state = {
       haveAuth: false,
+      haveCheckedAuth: false,
       user: {},
       email: '',
-      password: '',
-      teamActions: [],
-      teamMembers: ['Leigh', 'Will', 'Graham', 'Cody']
+      password: ''
     }
   }
 
@@ -44,6 +37,11 @@ class App extends Component {
 
   componentWillMount() {
     auth.onAuthStateChanged((user) => {
+      if (!this.state.haveCheckedAuth) {
+        this.setState({
+          haveCheckedAuth: true
+        });
+      }
       if (user) {
         this.setState({
           haveAuth: true,
@@ -55,40 +53,6 @@ class App extends Component {
           haveAuth: false
         });
       }
-    });
-
-    base.syncState(`teamActions`, {
-      context: this,
-      state: 'teamActions',
-      asArray: true
-    });
-  }
-
-  addItem(newItem) {
-    const { user: { email, displayName, uid }} = this.state;
-
-    const item = { 
-      userEmail: email,
-      displayName,
-      uid,
-      dateAdded: new Date(),
-      ...newItem
-    };
-
-    this.setState({
-      teamActions: this.state.teamActions.concat([ item ])
-    });
-
-  }
-
-  deleteTeamAction(index) {
-    const {teamActions} = this.state;
-    
-    this.setState({
-      teamActions: [
-        ...teamActions.slice(0, index),
-        ...teamActions.slice(index + 1)
-      ]
     });
   }
 
@@ -107,7 +71,12 @@ class App extends Component {
   }
 
   createUser() {
-    const { firstName, lastName, email, password } = this.state;
+    const { 
+      firstName, 
+      lastName, 
+      email, 
+      password 
+    } = this.state;
     
     if (firstName.length > 0 && lastName.length > 0 && email.length > 0 && password.length > 0) {
       firebaseUtils.createUser({
@@ -136,19 +105,21 @@ class App extends Component {
     });
   }
 
+  handleAuthInput(event) {
+    const { name, value } = event.target;
+
+    this.setState({
+      [name]: value
+    });
+  }
+
   signOut() {
     firebaseUtils.logout();
   }
 
   render() {
-    const App = (
-      <div className="">
-        <Button style={{float: 'right'}} onClick={this.signOut.bind(this)}> Signout </Button>
-          <Container>
-            <AddTeamAction addItem={this.addItem.bind(this)} />
-          </Container>
-          <TeamActionsList onDeleteTeamAction={this.deleteTeamAction.bind(this)} teamActions={this.state.teamActions} />
-      </div>
+    const TeamActions = (
+      <TeamActionsContainer signOut={this.signOut.bind(this)} user={this.state.user} />
     );
 
     const Login = (
@@ -156,13 +127,13 @@ class App extends Component {
         <Input value={this.state.email}   
           label="Email"
           name="email"
-          onChange={(event) => { this.setState({ email: event.target.value }) }} />
+          onChange={this.handleAuthInput.bind(this)} />
         <Input 
           value={this.state.password}
           type="password" 
           label="Password"
           name="password"
-          onChange={(event) => { this.setState({ password: event.target.value }) }} />
+          onChange={this.handleAuthInput.bind(this)} />
         <Button backgroundColor="secondary" 
           onClick={this.handleAuth.bind(this)}>
           Login
@@ -172,12 +143,12 @@ class App extends Component {
           label="First Name"
           name="firstName"
           value={this.state.firstName}
-          onChange={(event) => {this.setState({ firstName: event.target.value})}} />
+          onChange={this.handleAuthInput.bind(this)} />
         <Input 
           label="Last Name"
           name="lastName"
           value={this.state.lastName}
-          onChange={(event) => {this.setState({ lastName: event.target.value})}} />
+          onChange={this.handleAuthInput.bind(this)} />
         <Button backgroundColor="secondary" 
           onClick={this.createUser.bind(this)}>
           Register
@@ -186,13 +157,17 @@ class App extends Component {
       </RContainer>
     );
 
-    return (
-      this.state.haveAuth ?
-      App
-      :
-      Login
+    if (this.state.haveCheckedAuth) {
 
-    );
+      return (
+        this.state.haveAuth ?
+        TeamActions
+        :
+        Login
+      );
+    } else {
+      return null;
+    }
   }
 }
 

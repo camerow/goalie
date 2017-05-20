@@ -5,8 +5,7 @@ import {
     PanelHeader,
     Text,
     Button,
-    Space,
-    Heading
+    Space
 } from 'rebass';
 import { Container, Row, Col } from 'react-grid-system';
 
@@ -29,7 +28,7 @@ const TeamActionsList = ({ teamActions, onDeleteTeamAction }) => {
                                     <PanelFooter theme="secondary">
                                         Added By {action.displayName ? `${action.displayName}` : 'Unknown'}
                                         <Space x={2}/>
-                                        <Button backgroundColor="red" onClick={() => onDeleteTeamAction(i) }>Delete</Button>
+                                        <Button backgroundColor="red" onClick={() => onDeleteTeamAction(action) }>Delete</Button>
                                     </PanelFooter>
                                 </Panel>
                             </Col>

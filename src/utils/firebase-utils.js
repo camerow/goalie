@@ -1,9 +1,10 @@
 import Firebase from 'firebase';
 import config from './firebase-config';
 
-var ref = Firebase.initializeApp(config);
+let ref = Firebase.initializeApp(config);
 let auth = Firebase.auth();
 let database = Firebase.database();
+
 var cachedUser = null;
 
 var addNewUserToFB = function(newUser){
@@ -11,11 +12,45 @@ var addNewUserToFB = function(newUser){
   ref.child('user').child(key).set(newUser);
 };
 
-var createUserProfile = function(userData) {
-  console.log("USER DATA", userData);
-  var key = userData.uid;
-  ref.child('profile').child(key).set(userData);
-}
+
+var firebaseUtils = {
+  createUser: function({email, password, firstName, lastName}, errorCallback) {
+    auth.createUserWithEmailAndPassword(email, password)
+        .then((user) => {
+          const displayName = firstName + ' ' + lastName;
+          addNewUserToFB({
+            email,
+            firstName,
+            lastName,
+            displayName: firstName + ' ' + lastName,
+            uid: user.uid
+          });
+
+          user.updateProfile({
+            displayName
+          });
+
+          errorCallback(false, user);
+        })
+        .catch(function(error) {
+          errorCallback(error.message, undefined);
+        });
+  },
+  loginWithPW: function({ email, password }, errorCallback) {
+    auth.signInWithEmailAndPassword(email, password)
+      .then((res) => {
+          errorCallback(false, res);
+      })
+      .catch(error => {
+        console.error(error);        
+        errorCallback(error.message, undefined);
+      });
+  },
+  logout: function(){
+    auth.signOut();
+  }
+};
+
 
 var genErrorMsg = function(e) {
   var message = ""
@@ -77,41 +112,6 @@ var genErrorMsg = function(e) {
   }
   return message;
 }
-
-var firebaseUtils = {
-  createUser: function({email, password, firstName, lastName}, errorCallback) {
-    auth.createUserWithEmailAndPassword(email, password)
-        .then((user) => {
-          database.ref('users/' + user.uid).set({
-            email: email,
-            firstName,
-            lastName
-          });
-
-          user.updateProfile({
-            displayName: firstName + ' ' + lastName
-          });
-
-          errorCallback(false, user);
-        })
-        .catch(function(error) {
-          errorCallback(error.message, undefined);
-        });
-  },
-  loginWithPW: function({ email, password }, errorCallback) {
-    auth.signInWithEmailAndPassword(email, password)
-      .then((res) => {
-          errorCallback(false, res);
-      })
-      .catch(error => {
-        console.error(error);        
-        errorCallback(error.message, undefined);
-      });
-  },
-  logout: function(){
-    auth.signOut();
-  }
-};
 
 export {
   ref, 

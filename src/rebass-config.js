@@ -66,9 +66,6 @@ const zIndex = [
 const bold = 600
 const borderRadius = 2
 const borderColor = 'rgba(0, 0, 0, .25)'
-const baseStyles = {
-    color: baseColors.white
-}
 
 const config = {
     scale,
