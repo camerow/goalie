@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "firebase": "^4.0.0",
+    "firebase-functions": "^0.5.7",
     "re-base": "^2.8.0",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
