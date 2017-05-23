@@ -5,6 +5,7 @@ import {
   Input
 } from 'rebass';
 
+// TODO: add MS Active Directory support
 const Login = ({
     email,
     password,
