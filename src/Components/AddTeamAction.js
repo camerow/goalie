@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { 
-  Input, 
+import {
+  Input,
   Heading,
   Button,
 } from 'rebass';
@@ -15,7 +15,8 @@ class AddTeamAction extends Component {
             userActive: false,
             activeClass: 'hidden'
         }
-    }
+    };
+
     hideOrShowActionForm() {
         const {userActive} = this.state;
 
@@ -36,20 +37,20 @@ class AddTeamAction extends Component {
                 });
                 window.clearTimeout(this.tid);
             }
-        }, 2000);            
-    }
+        }, 2000);
+    };
 
     componentDidMount() {
         window.addEventListener('mousemove', this.hideOrShowActionForm.bind(this));
         window.addEventListener('keyup', this.hideOrShowActionForm.bind(this));
-    }
+    };
 
     componentWillUnmount() {
         window.clearTimeout(this.tid);
 
         window.removeEventListener('mousemove', this.hideOrShowActionForm);
         window.removeEventListener('keyup', this.hideOrShowActionForm);
-    }
+    };
 
     onAddAction() {
         this.props.addItem({...this.state});
@@ -57,7 +58,7 @@ class AddTeamAction extends Component {
             name: '',
             goal: ''
         });
-    }
+    };
 
     render() {
         const { activeClass } = this.state;
@@ -77,7 +78,7 @@ class AddTeamAction extends Component {
                             placeholder="ex. Send dev to trade show..."
                             onChange={(event) => this.setState({
                                 name: event.target.value
-                            }) 
+                            })
                             }
                             rounded
                             type="text"
@@ -87,7 +88,7 @@ class AddTeamAction extends Component {
                             name="input_example"
                             onChange={(event) => this.setState({
                                 goal: event.target.value
-                            }) 
+                            })
                             }
                             value={this.state.goal}
                             placeholder="Gain a better working knowledge of..."
@@ -100,14 +101,14 @@ class AddTeamAction extends Component {
                             inverted
                             rounded
                             onClick={this.onAddAction.bind(this)}>
-                                Add Team Goal 
+                                Add Team Goal
                             </Button>
                         </div>
                     </Col>
                 </Row>
             </Container>
         );
-    }
-}
+    };
+};
 
 export default AddTeamAction;

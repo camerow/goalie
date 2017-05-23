@@ -1,16 +1,16 @@
 import React, { Component } from 'react';
+import { Button } from 'rebass';
+import { Container } from 'react-grid-system';
+
+import base from './utils/base';
+import { database } from "./utils/firebase-refs";
+import {
+    addTeamGoal,
+    deleteTeamGoal,
+    updateGoalRating
+} from './utils/firebase-actions';
 import AddTeamAction from './Components/AddTeamAction';
 import TeamActionsList from './Components/TeamActionsList';
-import {
-  Button
-} from 'rebass';
-import {
-  Container
-} from 'react-grid-system';
-import base from './utils/base';
-import {
-  database
-} from "./utils/firebase-refs";
 
 class TeamActionsContainer extends Component {
     constructor(props) {
@@ -19,8 +19,8 @@ class TeamActionsContainer extends Component {
             teamActions: [],
             teamActionsFilter: '',
             actionItemMenusOpen: {}
-        }
-    }
+        };
+    };
 
     componentWillMount() {
         base.bindToState(`action-items`, {
@@ -28,15 +28,11 @@ class TeamActionsContainer extends Component {
             state: 'teamActions',
             asArray: true
         });
-    }
+    };
 
     deleteTeamAction({key, uid, ...rest}) {
-        let updates = {};
-        updates[`/action-items/${key}`] = null;
-        updates[`/user-action-items/${uid}/${key}`] = null;
-
-        return database.ref().update(updates);
-    }
+        deleteTeamGoal(key, uid);
+    };
 
     addItem(newItem) {
         const { user: {
@@ -45,7 +41,7 @@ class TeamActionsContainer extends Component {
             uid
         }} = this.props;
 
-        const item = {
+        const teamGoal = {
             userEmail: email,
             displayName,
             uid,
@@ -55,29 +51,20 @@ class TeamActionsContainer extends Component {
             name: newItem.name
         };
 
-        const newActionItemKey = database.ref().child('action-items').push().key;
-
-        let updates = {};
-        updates[`/action-items/${newActionItemKey}`] = item;
-        updates[`/user-action-items/${uid}/${newActionItemKey}`] = item;
-
-        return database.ref().update(updates);
-    }
+        addTeamGoal(teamGoal, uid);
+    };
 
     updateRating({key}, rating) {
-        database.ref().child('action-items/' + key).update({
-            rating
-        });
-    }
+        updateGoalRating(key, rating);
+    };
 
     openActionItemMenu(index) {
-        console.log(this.state.actionItemMenusOpen);
         this.setState({
             actionItemMenusOpen: Object.assign({}, this.state.actionItemMenusOpen, {
                 [index]: !this.state.actionItemMenusOpen[index]
             })
-        })
-    }
+        });
+    };
 
     render() {
         return (
@@ -92,7 +79,7 @@ class TeamActionsContainer extends Component {
                     teamActions={this.state.teamActions} />
             </div>
         );
-    }
-}
+    };
+};
 
 export default TeamActionsContainer;

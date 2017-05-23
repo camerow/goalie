@@ -27,13 +27,13 @@ class App extends Component {
       email: '',
       password: ''
     }
-  }
+  };
 
   getChildContext () {
     return {
       rebass: config
-    }
-  }
+    };
+  };
 
   componentWillMount() {
     auth.onAuthStateChanged((user) => {
@@ -54,7 +54,7 @@ class App extends Component {
         });
       }
     });
-  }
+  };
 
   handleAuth(provider) {
     switch (provider) {
@@ -64,7 +64,6 @@ class App extends Component {
           password: this.state.password
         })
         .then(response => {
-          console.log('success auth response', response)
           this.setCurrentUser();
         })
         .catch(error => {
@@ -88,7 +87,7 @@ class App extends Component {
         });
         break;
     }
-  }
+  };
 
   createUser() {
     const {
@@ -119,7 +118,7 @@ class App extends Component {
         error: 'You must provide a first and last name, email and password to register.'
       })
     }
-  }
+  };
 
   validateUserFields({firstName, lastName, email, password}) {
     return (
@@ -128,24 +127,24 @@ class App extends Component {
       email.length > 0 &&
       password.length > 0
     );
-  }
+  };
 
   setCurrentUser() {
     this.setState({
       user: auth.currentUser
     });
-  }
+  };
 
   handleAuthInput(event) {
     const { name, value } = event.target;
     this.setState({
       [name]: value
     });
-  }
+  };
 
   signOut() {
     firebaseAuth.logout();
-  }
+  };
 
   render() {
     const TeamActions = (
@@ -180,11 +179,11 @@ class App extends Component {
     else {
       return null;
     }
-  }
-}
+  };
+};
 
 App.childContextTypes = {
   rebass: React.PropTypes.object
-}
+};
 
 export default App;

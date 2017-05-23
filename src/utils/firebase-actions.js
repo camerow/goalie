@@ -33,20 +33,37 @@ const createUser = ({email, password, firstName, lastName}, errorCallback) => {
             .catch(function(error) {
                 reject(error);
             });
-    })
-}
+    });
+};
 
+// @TODO: user should be in a team before they can assign a goal to a team
+//
 const addTeamGoal = (teamGoal, uid) => {
-    const newActionItemKey = database.rootRef().child('action-items').push().key;
+    const newTeamGoalID = database.ref().child('action-items').push().key;
 
     let updates = {};
-    updates[`/action-items/${newActionItemKey}`] = teamGoal;
-    updates[`/user-action-items/${uid}/${newActionItemKey}`] = teamGoal;
+    updates[`/action-items/${newTeamGoalID}`] = teamGoal;
+    updates[`/user-action-items/${uid}/${newTeamGoalID}`] = teamGoal;
 
-    return database.rootRef().update(updates);
-}
+    return database.ref().update(updates);
+};
+
+const deleteTeamGoal = (key, uid) => {
+    let updates = {};
+    updates[`/action-items/${key}`] = null;
+    updates[`/user-action-items/${uid}/${key}`] = null;
+    return database.ref().update(updates);
+};
+
+const updateGoalRating = (key, rating) => {
+    database.ref().child('action-items/' + key).update({
+        rating
+    });
+};
 
 export {
     createUser,
-    addTeamGoal
-}
+    addTeamGoal,
+    deleteTeamGoal,
+    updateGoalRating
+};
