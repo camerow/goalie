@@ -18,21 +18,24 @@ const Login = ({
 }) => {
     return (
         <RContainer>
-            <Input value={email}   
+            <Input value={email}
                     label="Email"
                     name="email"
                     onChange={onInputChange} />
             <Input value={password}
-                    type="password" 
+                    type="password"
                     label="Password"
                     name="password"
                     onChange={onInputChange} />
 
-            <Button backgroundColor="secondary" 
-                    onClick={authenticate}>
+            <Button backgroundColor="secondary"
+                    onClick={() => authenticate('password')}>
                 Login
             </Button>
-            
+            <Button backgroundColor="secondary"
+                    onClick={() => authenticate('microsoftAD')}>
+                Login with Microsoft
+            </Button>
             <Input label="First Name"
                     name="firstName"
                     value={firstName}
@@ -41,7 +44,7 @@ const Login = ({
                     name="lastName"
                     value={lastName}
                     onChange={onInputChange} />
-            <Button backgroundColor="secondary" 
+            <Button backgroundColor="secondary"
                     onClick={createUser}>
                 Register
             </Button>

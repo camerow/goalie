@@ -6,11 +6,12 @@ import {
   Container as RContainer,
   Input
 } from 'rebass';
-
+import { auth } from './utils/firebase-refs';
+import firebaseAuth from "./utils/firebase-auth";
 import {
-  firebaseUtils, 
-  auth
-} from "./utils/firebase-utils";
+  createUser as createFirebaseUser
+} from "./utils/firebase-actions";
+
 import config from './rebass-config';
 import Login from './Login';
 import TeamActionsContainer from './TeamActionsContainer';
@@ -55,47 +56,78 @@ class App extends Component {
     });
   }
 
-  handleAuth() {
-    firebaseUtils.loginWithPW({ 
-      email: this.state.email, 
-      password: this.state.password 
-    }, (err) => {
-      if (err) {
-        this.setState({ error: err });
-      }
-      else {
-        this.setCurrentUser();
-      }
-    });
+  handleAuth(provider) {
+    switch (provider) {
+      case 'password':
+        firebaseAuth.loginWithPW({
+          email: this.state.email,
+          password: this.state.password
+        })
+        .then(response => {
+          console.log('success auth response', response)
+          this.setCurrentUser();
+        })
+        .catch(error => {
+          console.log(error);
+          this.setState({
+            error: error.message
+          });
+        });
+
+        break;
+
+      case 'microsoftAD':
+
+        this.setState({
+          error: 'Please specify an Auth provider.'
+        });
+        break;
+      default:
+        this.setState({
+          error: 'Please specify an Auth provider.'
+        });
+        break;
+    }
   }
 
   createUser() {
-    const { 
-      firstName, 
-      lastName, 
-      email, 
-      password 
+    const {
+      firstName,
+      lastName,
+      email,
+      password
     } = this.state;
-    
-    if (firstName.length > 0 && lastName.length > 0 && email.length > 0 && password.length > 0) {
-      firebaseUtils.createUser({
+
+    if (this.validateUserFields(this.state)) {
+      createFirebaseUser({
         email,
         password,
         firstName,
         lastName
-      }, (err, res) => {
-        if ( !err ) {
-          this.setState({ error: err });
-        }
-        else {
-          this.setCurrentUser();
-        }
+      })
+      .then((user) => {
+        this.setCurrentUser();
+      })
+      .catch((error) => {
+        this.setState({
+          error: error.message
+        });
       });
+
     } else {
       this.setState({
         error: 'You must provide a first and last name, email and password to register.'
       })
     }
+  }
+
+  validateUserFields({firstName, lastName, email, password}) {
+    return (
+      firstName.length > 0 &&
+      lastName.length > 0 &&
+      email.length > 0 &&
+      password.length > 0
+    );
   }
 
   setCurrentUser() {
@@ -112,38 +144,39 @@ class App extends Component {
   }
 
   signOut() {
-    firebaseUtils.logout();
+    firebaseAuth.logout();
   }
 
   render() {
     const TeamActions = (
-      <TeamActionsContainer 
-        signOut={this.signOut.bind(this)} 
+      <TeamActionsContainer
+        signOut={this.signOut.bind(this)}
         user={this.state.user} />
     );
 
     if (this.state.haveCheckedAuth) {
       return (
-        <div>          
+        <div>
           {
             this.state.haveAuth ?
             <div>
-              <Button style={{float: 'right'}} onClick={this.signOut.bind(this)}> 
-                Signout 
+              <Button style={{float: 'right'}} onClick={this.signOut.bind(this)}>
+                Signout
               </Button>
 
               {TeamActions}
 
-            </div>              
+            </div>
             :
-            <Login 
-              createUser={this.createUser.bind(this)} 
-              authenticate={this.handleAuth.bind(this)} 
+            <Login
+              error={this.state.error}
+              createUser={this.createUser.bind(this)}
+              authenticate={this.handleAuth.bind(this)}
               onInputChange={this.handleAuthInput.bind(this)} />
           }
         </div>
       );
-    } 
+    }
     else {
       return null;
     }

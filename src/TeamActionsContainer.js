@@ -10,7 +10,7 @@ import {
 import base from './utils/base';
 import {
   database
-} from "./utils/firebase-utils";
+} from "./utils/firebase-refs";
 
 class TeamActionsContainer extends Component {
     constructor(props) {
@@ -39,13 +39,13 @@ class TeamActionsContainer extends Component {
     }
 
     addItem(newItem) {
-        const { user: { 
-            email, 
-            displayName, 
-            uid 
+        const { user: {
+            email,
+            displayName,
+            uid
         }} = this.props;
 
-        const item = { 
+        const item = {
             userEmail: email,
             displayName,
             uid,
@@ -73,22 +73,22 @@ class TeamActionsContainer extends Component {
     openActionItemMenu(index) {
         console.log(this.state.actionItemMenusOpen);
         this.setState({
-            actionItemMenusOpen: Object.assign({}, this.state.actionItemMenusOpen, { 
-                [index]: !this.state.actionItemMenusOpen[index] 
+            actionItemMenusOpen: Object.assign({}, this.state.actionItemMenusOpen, {
+                [index]: !this.state.actionItemMenusOpen[index]
             })
         })
     }
 
     render() {
         return (
-            <div>                
+            <div>
                 <AddTeamAction addItem={this.addItem.bind(this)} />
-                
-                <TeamActionsList 
+
+                <TeamActionsList
                     menusOpen={this.state.actionItemMenusOpen}
                     openMenu={this.openActionItemMenu.bind(this)}
-                    updateRating={this.updateRating.bind(this)} 
-                    onDeleteTeamAction={this.deleteTeamAction.bind(this)} 
+                    updateRating={this.updateRating.bind(this)}
+                    onDeleteTeamAction={this.deleteTeamAction.bind(this)}
                     teamActions={this.state.teamActions} />
             </div>
         );
