@@ -6,6 +6,7 @@ import {
   Container as RContainer,
   Input
 } from 'rebass';
+import axios from 'axios';
 import { auth } from './utils/firebase-refs';
 import firebaseAuth from "./utils/firebase-auth";
 import {
@@ -14,8 +15,13 @@ import {
 
 import config from './rebass-config';
 import Login from './Login';
-import TeamActionsContainer from './TeamActionsContainer';
+import TeamGoalsContainer from './TeamGoalsContainer';
 import './App.css';
+
+const tenantID = 'common';
+const clientID = '52a7830c-1d12-4652-8b4b-62ea84d7dd68';
+const resourceID = '00000002-0000-0000-c000-000000000000';
+const appURI = encodeURIComponent('http://localhost:3000');
 
 class App extends Component {
   constructor() {
@@ -34,6 +40,24 @@ class App extends Component {
       rebass: config
     };
   };
+
+  getOAuthCode() {
+    const code = window.location.search && window.location.search.split('=')[1];
+
+    axios.get('https://us-central1-team-goals-c69f0.cloudfunctions.net/azureAD', {
+      code
+    })
+    .then(res => {
+      console.log(res);
+    })
+    .catch(error => {
+      console.error(error);
+    })
+  }
+
+  componentDidMount() {
+    this.getOAuthCode()
+  }
 
   componentWillMount() {
     auth.onAuthStateChanged((user) => {
@@ -77,9 +101,7 @@ class App extends Component {
 
       case 'microsoftAD':
 
-        this.setState({
-          error: 'Please specify an Auth provider.'
-        });
+        window.location = `https://login.microsoftonline.com/${tenantID}/oauth2/authorize?client_id=${clientID}&response_type=code&redirect_uri=${appURI}&response_mode=query&resource=${resourceID}&state=12345`;
         break;
       default:
         this.setState({
@@ -148,7 +170,7 @@ class App extends Component {
 
   render() {
     const TeamActions = (
-      <TeamActionsContainer
+      <TeamGoalsContainer
         signOut={this.signOut.bind(this)}
         user={this.state.user} />
     );

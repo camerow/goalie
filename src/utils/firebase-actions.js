@@ -52,6 +52,7 @@ const deleteTeamGoal = (key, uid) => {
     let updates = {};
     updates[`/action-items/${key}`] = null;
     updates[`/user-action-items/${uid}/${key}`] = null;
+
     return database.ref().update(updates);
 };
 
